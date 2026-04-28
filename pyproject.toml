@@ -1,0 +1,43 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "pydantic-cal"
+version = "0.0.1"
+description = "LLM calibration metrics for pydantic-evals: ECE, MCE, ACE, Brier, reliability diagrams, temperature/Platt/isotonic scaling, semantic entropy."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [
+    { name = "Federico Benini", email = "smigolsmigol@protonmail.com" },
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Scientific/Engineering :: Mathematics",
+    "License :: OSI Approved :: MIT License",
+]
+dependencies = [
+    "pydantic>=2.10",
+    "numpy>=1.24",
+]
+
+[project.optional-dependencies]
+pydantic-evals = ["pydantic-evals>=1.87"]
+plot = ["matplotlib>=3.8"]
+dev = [
+    "pytest>=8.0",
+    "pydantic-evals>=1.87",
+    "matplotlib>=3.8",
+    "ruff>=0.7",
+    "mypy>=1.10",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/pydantic_cal"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
