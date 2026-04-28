@@ -34,7 +34,7 @@ from pydantic_cal.metrics import (
 )
 from pydantic_cal.scalers import IsotonicScaler, PlattScaler, TemperatureScaler
 
-__version__ = "0.0.1"
+__version__ = "0.0.2"
 
 __all__ = [
     # metrics

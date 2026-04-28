@@ -54,17 +54,31 @@ The `_geometry` module ships textbook information-geometry primitives (Amari 198
 
 ## Pydantic-evals integration
 
+Drops directly into `dataset.evaluate(report_evaluators=[...])`. Each evaluator pulls (confidence, correct) pairs out of the report via the case metrics + assertions and emits a pydantic-evals `ScalarResult` (ECE / MCE / ACE / Brier) or `LinePlot` (ReliabilityDiagram).
+
+```bash
+pip install pydantic-cal[pydantic-evals]
+```
+
 ```python
-# (lands in v0.0.2 - adapter via the Evaluator + ReportEvaluator hooks)
+from pydantic_evals import Case, Dataset
 from pydantic_cal.evaluators import ECE, Brier, ReliabilityDiagram
 
-dataset = Dataset(cases=[...])
+dataset = Dataset(cases=[
+    Case(name="q1", inputs={"prompt": "..."}, expected_output="yes",
+         metadata={"confidence": 0.92}),
+    Case(name="q2", inputs={"prompt": "..."}, expected_output="no",
+         metadata={"confidence": 0.51}),
+    # ...
+])
+
 report = await dataset.evaluate(
     task_fn,
     report_evaluators=[ECE(n_bins=10), Brier(), ReliabilityDiagram()],
 )
-print(report.report_metrics["ece"])
 ```
+
+By convention each evaluator reads `case.metrics["confidence"]` (falling back to `case.metadata["confidence"]`) and `case.assertions["correct"]` (falling back to `case.expected_output == case.output`). All three knobs are constructor-overridable: `confidence_field=`, `correct_field=`, `correct_fn=`.
 
 ## What's behind `pydantic_cal.crazy`
 
