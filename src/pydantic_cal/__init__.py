@@ -31,10 +31,11 @@ from pydantic_cal.metrics import (
     ece,
     mce,
     reliability_curve,
+    smece,
 )
 from pydantic_cal.scalers import IsotonicScaler, PlattScaler, TemperatureScaler
 
-__version__ = "0.0.2"
+__version__ = "0.0.3"
 
 __all__ = [
     # metrics
@@ -45,6 +46,7 @@ __all__ = [
     "ece",
     "mce",
     "reliability_curve",
+    "smece",
     # decomposition
     "BrierDecomposition",
     "brier_decomposition",

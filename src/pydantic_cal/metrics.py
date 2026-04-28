@@ -155,3 +155,51 @@ def brier(confidences: np.ndarray, correct: np.ndarray) -> float:
     """
     c, y = _validate(confidences, correct)
     return float(np.mean((c - y) ** 2))
+
+
+def smece(
+    confidences: np.ndarray,
+    correct: np.ndarray,
+    *,
+    sigma: float = 0.1,
+    chunk_size: int = 1024,
+) -> float:
+    """Smooth Expected Calibration Error (Blasiok et al. 2023).
+
+    Bin-free ECE via a Gaussian-kernel-smoothed reliability curve:
+
+        smECE(sigma) = mean_i | f_hat(c_i) - c_i |
+
+    where f_hat(c) = sum_j K_sigma(c - c_j) * y_j / sum_j K_sigma(c - c_j)
+    is the kernel-smoothed local average of correctness as a function of
+    confidence and K_sigma(d) = exp(-d^2 / (2 sigma^2)) is a Gaussian
+    with bandwidth sigma.
+
+    Eliminates the binning bias of vanilla ECE: the value no longer
+    shifts with bin choice, and small calibration gaps stay visible
+    instead of being smeared inside a coarse bin.
+
+    sigma is the kernel bandwidth on [0, 1]; 0.1 is the paper default.
+    Smaller sigma = sharper curve, more variance at small n. Larger
+    sigma = smoother curve, more bias.
+
+    chunk_size bounds the memory of the (i, j) Gaussian kernel matrix to
+    O(chunk_size * n); the default works comfortably for n up to ~50k.
+
+    Reference: Blasiok, Gopalan, Hu, Nakkiran 2023, "A Unifying Theory
+    of Distance from Calibration" (arXiv:2304.01355).
+    """
+    c, y = _validate(confidences, correct)
+    if not (0.0 < sigma <= 1.0):
+        raise ValueError(f"sigma must lie in (0, 1], got {sigma}")
+    n = c.size
+    inv_two_sigma_sq = 1.0 / (2.0 * sigma * sigma)
+    f_hat = np.empty(n, dtype=np.float64)
+    for start in range(0, n, chunk_size):
+        end = min(start + chunk_size, n)
+        diffs = c[start:end, None] - c[None, :]
+        weights = np.exp(-(diffs * diffs) * inv_two_sigma_sq)
+        num = weights @ y
+        den = weights.sum(axis=1)
+        f_hat[start:end] = num / den
+    return float(np.mean(np.abs(f_hat - c)))
