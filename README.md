@@ -1,5 +1,7 @@
 # pydantic-cal
 
+[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/smigolsmigol/pydantic-cal/badge)](https://scorecard.dev/viewer/?uri=github.com/smigolsmigol/pydantic-cal)
+
 Accuracy answers *"is the model right?"*. Calibration answers *"when the model says it's 90% confident, is it right 90% of the time?"*. An LLM can be 91% accurate and 72% miscalibrated at the same time. Every eval library on PyPI today reports the first number; none report the second. `pydantic-cal` is the calibration layer for [pydantic-evals](https://ai.pydantic.dev/evals/).
 
 ```bash

@@ -13,3 +13,22 @@ __pycache__/
 dist/
 build/
 *.egg-info/
+
+# secrets and credentials
+.env
+.env.*
+.dev.vars
+.dev.keys
+*.pem
+*.key
+*.p12
+*.pfx
+credentials.json
+*_token
+*_secret
+.npmrc
+.pypirc
+
+# local tooling
+.claude/
+.mcp.json
