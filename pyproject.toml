@@ -27,10 +27,19 @@ dependencies = [
 [project.optional-dependencies]
 pydantic-evals = ["pydantic-evals>=1.87"]
 plot = ["matplotlib>=3.8"]
+cache = [
+    # f3dx.cache.cached_call -- f3d1-wide convention for real-API
+    # calibration runs. fixture-backed playback so a 1000-prediction
+    # calibration dataset becomes a one-time API spend, then replays
+    # deterministically on every regression run. doc:
+    # smigolsmigol/f3dx docs/workflows/real_api_benches.md
+    "f3dx>=0.0.18",
+]
 dev = [
     "pytest>=8.0",
     "pydantic-evals>=1.87",
     "matplotlib>=3.8",
+    "f3dx>=0.0.18",
     "ruff>=0.7",
     "mypy>=1.10",
 ]
