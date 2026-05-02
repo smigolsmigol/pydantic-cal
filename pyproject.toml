@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "pydantic-cal"
-version = "0.0.3"
+version = "0.0.4"
 description = "LLM calibration metrics for pydantic-evals: ECE, MCE, ACE, Brier, reliability diagrams, temperature/Platt/isotonic scaling, semantic entropy."
 readme = "README.md"
 requires-python = ">=3.10"
